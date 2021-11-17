@@ -147,3 +147,15 @@ FBV(Function Based View)는 함수에 기반을 둔 방법이다. 함수를 직�
 
 CBV(Class Based View)는 장고가 제공하는 클래스를 활용해 구현하는 방법이다. 장고는 웹 개발 시 반복적으로 많이 구현하는 것들을 클래스로 미리 만들어서 제공하는데, 이 클래스들을 이용하는 방법이다.  
 
+사용한 CBV  
+
+- ListView  
+
+ListView는 모델명 뒤에 _list가 붙은 html파일을 기본 템플릿으로 사용한다. 모델명_list.html 파일이 필요하다.  
+
+예를 들어 Post 모델을 사용하면 Post_list.html 파일이 필요하다.  
+
+해당 파일을 만들어도 되고, 해당 클래스에서 template_name을 지정해줘도 된다.  
+
+또한 템플릿에서 ListView로 만든 클래스의 모델 객체를 가져오려면 object_list 명령어를 사용하면 된다. 또는 모델명_list 명령어를 써도 자동으로 인식한다.  
+
