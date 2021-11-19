@@ -24,7 +24,7 @@
 - Landing page  
 - Blog page  
 - 자기소개 page  
-- 2개의 앱으로 구성됨  
+- blog, single_pages 2개의 앱으로 구성됨  
 
 URL 구조
 
@@ -38,8 +38,6 @@ URL 구조
 ## 모델 구조  
 
 Post: 포스트의 형태 정의
-
-
 
 블로그 기능을 위한 blog 앱, landing page와 자기소개 page를 위한 single_pages 앱으로 구성되어 있다.
 
@@ -211,6 +209,26 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '_media')
 
 를 추가한다.  
 
-이미지 파일은 프로젝트 폴더 아래 _media 라는 이름의 폴더를 만들고 그 안에 저장하도록 한다.  
+이미지 파일은 MEDIA_ROOT 설정을 통해 프로젝트 폴더 아래 _media 라는 이름의 폴더를 만들고 그 안에 저장하도록 한다.  
 
-그리고 MEDIA_URL은 /media/로 지정했다. 웹 브라우저에서 도메인 뒤에 /media/라는 경로가 따라오면 미디어 파일을 사용하겠다는 의미이다.
+그리고 MEDIA_URL은 /media/로 지정했다. 웹 브라우저에서 도메인 뒤에 /media/라는 경로가 따라오면 미디어 파일을 사용하겠다는 의미이다.  
+
+또한 ImageField를 사용하기 위해서는 Pillow 라이브러리가 필요하다.
+
+```buildoutcfg
+pip install Pillow
+```
+
+로 Pillow를 가상환경에 설치 후 migration 한다.  
+
+이제 media 가 url에 있을 때 인식시키기 위하여 django_plog_prj/urls.py에 
+
+```buildoutcfg
+from django.conf import settings
+from django.conf import path, include
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+를 추가해준다.  
+
