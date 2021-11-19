@@ -35,7 +35,6 @@ URL 구조
 |블로그 페이지 - 포스트 상세|도메인/blog/포스트pk|
 |자기소개 페이지|도메인/about_me|
 
-
 ## 모델 구조  
 
 Post: 포스트의 형태 정의
@@ -173,3 +172,45 @@ ListView는 모델명 뒤에 _list.html 이 붙은 html 파일을 기본 템플�
 
 또한 템플릿에서 DetailView로 만든 클래스의 모델 객체를 가져오려면 object_detail 명령어를 사용하면 된다. 또는 모델명_detail 명령어를 써도 자동으로 인식한다.  
 
+### template  
+
+데이터를 채워넣고 사용자에게 보여주기 위한 틀이다.  
+
+앱 폴더에 있는 templates 폴더의 html 파일은 정적인 파일이 아니다. templates 폴더에 css, js 파일을 함께 넣어 두어도 해당 파일에 접근할 수 없다.  
+
+css, js 파일은 고정된 내용만 제공하면 되므로 특정 URL로 접근하면 해당 css, js 파일을 제공할 수 있도록 설정한다.  
+
+### static, 미디어 사용  
+
+css, js 파일은 고정된 내용만 제공하면 되므로 특정 URL로 접근하면 해당 css, js 파일을 제공할 수 있도록 설정한다.  
+
+templates이 있는 곳. 즉, html 파일이 있는 디렉토리에 바로 css, js 파일을 두면 사용할 수 없다.  
+
+templates는 정적이 아닌 동적 파일로 간주하기 때문이다.  
+
+따라서 앱이 디렉토리 하위에 static 디렉토리를 만들어서 css, js 파일을 두고 사용한다.
+
+```
+STATIC_URL = '/static/'
+```
+
+도메인 뒤에 /static/이라는 경로가 따라오면 static 파일을 사용하겠다는 의미이다.
+
+---
+
+장고는 이미지 업로드를 위한 ImageField를 제공한다.  
+
+ImageField를 사용하기 위해 사용자가 업로드할 이미지를 저장할 위치를 먼저 설정해야 한다.  
+
+settings.py에 
+
+```
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '_media')
+```
+
+를 추가한다.  
+
+이미지 파일은 프로젝트 폴더 아래 _media 라는 이름의 폴더를 만들고 그 안에 저장하도록 한다.  
+
+그리고 MEDIA_URL은 /media/로 지정했다. 웹 브라우저에서 도메인 뒤에 /media/라는 경로가 따라오면 미디어 파일을 사용하겠다는 의미이다.
