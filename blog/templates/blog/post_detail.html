@@ -55,7 +55,11 @@
                     <hr/>
 
                     <!--Preview Image-->
-                    <img class="img-fluid rounded" src="{{ post.head_image.url }}" alt="http://placehold.it/900x300">
+                    {% if post.head_image %}
+                    <a href="{{ post.get_absolute_url }}"><img class="card-img-top" src="{{ post.head_image.url }}" alt="..." /></a>
+                    {% else %}
+                    <a href="{{ post.get_absolute_url }}"><img class="card-img-top" src="https://picsum.photos/seed/{{ post.pk }}/800/600" alt="..." /></a>
+                    {% endif %}
 
                     <hr/>
 
