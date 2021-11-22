@@ -104,7 +104,11 @@ autocrlf=true
 그래서 그냥 static 파일을 .gitignore에 등록하고 그냥 푸시를 안 하기로 했다.  
 
 static 파일은 뭐.. 나중에 따로라도 올리면 되니까..  
-
+```
+├── static ─── blog ─── bootstrap ─── bootstrap.min.css
+                     │             └── bootstrap.min.css.map
+                     └── css ─── blog-post.css
+``` 
 그런데 3개월 전에는 css 파일도 잘 올라갔는데 왜 이럴까?  
 
 회사 네트워크 망의 문제일까? 그 사이에 깃허브 정책이 바뀐 것일까?(이건 아닌 것 같다.) 아니면 내가 무언가를 잘못 한 걸까?  
