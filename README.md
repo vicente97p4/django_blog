@@ -238,3 +238,40 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 를 추가해준다.  
 
+### Template 모듈화  
+
+디자인이 일관되게 유지되어야 편리한 경우가 많다.  
+
+하나의 페이지에 메인 영역을 뺀 나머지 영역을 만들어 놓고 그 부분만 채워주면 편리하게 쓸 수 있다.  
+
+모듈화한 template에 따로 채워넣어야 하는 부분을 아래와 같이 {% block 블록명 %}, {% endblock %}으로 감싸준다.  
+
+```buildoutcfg
+<div class="container my-3">
+    <div class="row">
+        <div class="col-md-8 col-lg-9" id="main-area">
+            {% block 블록명 %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+```
+
+채워넣을 내용이 있는 html 문서에서는 다음과 같이 {% extends '파일명' %}을 선언해주고 전달할 내용을 {% block 블록명 %}, {% endblock %}으로 감싸준다.  
+
+```buildoutcfg
+{% extends 'blog/base.html' %}
+
+{% block 블록명 %}
+내용
+{% endblock %}
+```
+
+만일 다음과 같이 블록 사이에 값이 들어 있다면, 해당 블록에 해당하는 값이 채워지지 않을 경우 나타나는 기본값임을 의미한다.  
+
+```buildoutcfg
+{% block 블록명 %}
+안 채워졌을 경우 나타나는 기본값
+{% endblock %}
+```
+
