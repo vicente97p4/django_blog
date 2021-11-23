@@ -275,3 +275,9 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 {% endblock %}
 ```
 
+템플릿을 붙여넣고 싶을 때 원하는 위치에 아래 코드를 입력한다.  
+
+```buildoutcfg
+{% include '템플릿' %}
+```
+
