@@ -54,7 +54,7 @@ User - Post - Category와 User - Comment - Post가 있다.
 Post 모델은 author를 Foreign key로 두어 User와 연결한다.  
 
 ```buildoutcfg
-author = models.ForeignKey(User, on_delete=models.CASCADE)
+author = models.ForeignKey(User, on_delete=models.SET_NULL)
 ```
 
 - 다대다 관계  
