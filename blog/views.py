@@ -33,6 +33,12 @@ class PostList(ListView):
 class PostDetail(DetailView):
     model = Post
 
+    def get_context_data(self, **kwargs):
+        context = super(PostDetail, self).get_context_data()  # 기존에 제공했던 기능을 가져와서 context 변수에 저장
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
+
 
 # FBV로 작업했을 때
 # def single_post_page(request, pk):
