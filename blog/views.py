@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
-from .models import Post
+from .models import Post, Category
 
 # Create your views here.
 
@@ -10,6 +10,12 @@ from .models import Post
 class PostList(ListView):
     model = Post
     ordering = '-pk'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PostList, self).get_context_data() # 기존에 제공했던 기능을 가져와서 context 변수에 저장
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
 
 # FBV로 작업했을 때
 # def index(request):

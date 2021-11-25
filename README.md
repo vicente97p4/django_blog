@@ -26,7 +26,7 @@
 - Landing page  
 - Blog page  
 - 자기소개 page  
-- blog, single_pages 2개의 앱으로 구성됨  
+- Category page(카테고리 클릭 시 카테고리에 해당되는 포스트가 나열된다.)
 
 URL 구조
 
@@ -35,13 +35,19 @@ URL 구조
 |Landing page|도메인/|
 |블로그 페이지 - 포스트 목록|도메인/blog/|
 |블로그 페이지 - 포스트 상세|도메인/blog/포스트pk|
-|자기소개 페이지|도메인/about_me|
+|자기소개 페이지|도메인/about_me|  
+
+### 앱
+
+블로그 기능을 위한 blog 앱, landing page와 자기소개 page를 위한 single_pages 앱으로 구성되어 있다.  
 
 ## 모델 구조  
 
+User: 사용자 모델, 장고에서 제공하는 User 모델 사용
+
 Post: 포스트의 형태 정의
 
-블로그 기능을 위한 blog 앱, landing page와 자기소개 page를 위한 single_pages 앱으로 구성되어 있다.
+Category: 포스트가 해당하는 카테고리 모델
 
 - 다대일 관계  
 
@@ -194,6 +200,33 @@ ListView는 모델명 뒤에 _list.html 이 붙은 html 파일을 기본 템플�
 
 또한 템플릿에서 DetailView로 만든 클래스의 모델 객체를 가져오려면 object_detail 명령어를 사용하면 된다. 또는 모델명_detail 명령어를 써도 자동으로 인식한다.  
 
+- ListView와 DetailView 같은 클래스는 기본적으로 get_context_data 메서드를 내장하고 있다.  
+
+ListView를 상속받은 클래스에서 단지 model = 모델 이라고 선언하면 context_data에서 자동으로 모델_list = 모델.objects.all()을 명령한다.  
+
+그래서 템플릿에서 바로 모델_list 변수를 사용할 수 있는 것이다.  
+
+이 context_data 메서드를 오버라이딩 하여 정보를 추가하여 활용할 수 있다.  
+
+```buildoutcfg
+Post 모델인 경우  
+model = Post # 이 경우 context_data 메서드에서 자동으로 post_list = Post.objects.all() 메서드를 실행한다.
+```
+
+```buildoutcfg
+get_context_data 오버라이딩 활용 예시
+
+class PostList(ListView):
+    model = Post
+    
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PostList, self).get_context_data() # 기존에 제공했던 기능을 가져와서 context 변수에 저장
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
+```
+
+
 ### template  
 
 데이터를 채워넣고 사용자에게 보여주기 위한 틀이다.  
@@ -301,5 +334,17 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 ```buildoutcfg
 {% include '템플릿' %}
+```
+
+### Slug  
+
+SlugField는 사람이 읽을 수 있는 텍스트로 고유 URL을 만들고 싶을 때 주로 사용한다.  
+
+페이지의 개수가 많지 않을 때 사용하는 것이 좋다.  
+
+원래 SlugField는 한글을 지원하지 않지만 allow_unicode=True로 설정해 한글로도 만들 수 있게 한다.  
+
+```buildoutcfg
+field = models.SlugField(max_length=200, unique=True, allow_unicode=True)
 ```
 
