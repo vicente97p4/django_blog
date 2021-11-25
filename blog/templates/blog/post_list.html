@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 
 {% block main_area %}
-            <h1>Blog</h1>
+            <h1>Blog {% if category %}<span class="badge badge-secondary">{{ category }} {% endif %}</span> </h1>
 
             {% if post_list.exists %}
 
@@ -34,7 +34,7 @@
                 </div>
                 {% endfor %}
             {% else %}
-             <h3>아직 게시물이 없습니다.</h3>
+             <h3 class="my-5">아직 게시물이 없습니다.</h3>
             {% endif %}
 
             <!-- Pagination-->

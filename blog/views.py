@@ -51,3 +51,23 @@ class PostDetail(DetailView):
 #             'post' : post
 #         }
 #     )
+
+# category page URL이 왔을 때(FBV로 작업)
+def category_page(request, slug):
+    if slug == 'no_category':
+        category = '미분류'
+        post_list = Post.objects.filter(category=None)
+    else:
+        category = Category.objects.get(slug=slug) # slug와 동일한 값을 갖는 카테고리를 불러오는 쿼리
+        post_list = Post.objects.filter(category=category)
+
+    return render(
+        request,
+        'blog/post_list.html', # post_list 템플릿을 그대로 사용함
+        { # PostList 클래스에서 context로 정의했던 부분을 딕셔너리 형태로 직접 정의해야 함
+            'post_list': post_list,
+            'categories': Category.objects.all(),
+            'no_category_post_count': Post.objects.filter(category=None).count(),
+            'category': category # post_list 템플릿에서 제목 옆에 뱃지를 붙일 때 카테고리 리스트인지 그냥 포스트 리스트인지 판단하는 용으로도 쓰인다.
+        }
+    )
