@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
-from .models import Post, Category
+from .models import Post, Category, Tag
 
 # Create your tests here.
 # 테스트를 진행할 때 이미 운영되고 있는 서버의 DB를 건드리면 곤란하므로 가상 DB를 만들고 진행한다.
@@ -16,12 +16,20 @@ class TestView(TestCase):
         self.category_programming = Category.objects.create(name='programming', slug='programming')
         self.category_music = Category.objects.create(name='music', slug='music')
 
+        self.tag_python_kor = Tag.objects.create(name='파이썬 공부', slug='파이썬-공부')
+        self.tag_python = Tag.objects.create(name='python', slug='python')
+        self.tag_hello = Tag.objects.create(name='hello', slug='hello')
+
         self.post_001 = Post.objects.create(
             title='첫 포스트입니다.',
             content='Hello world.',
             category=self.category_programming,
             author=self.user_001
         )
+
+        # ManyToManyField는 objects.create() 안에 매개변수로 넣어지는 것이 아니라 add 함수로 추가한다. 여러 레코드를 연결할 수 있기 때문이다.
+        self.post_001.tags.add(self.tag_hello)
+
         self.post_002 = Post.objects.create(
             title='두 번째 포스트입니다.',
             content='Hello world.',
@@ -33,6 +41,8 @@ class TestView(TestCase):
             content='Hello world.',
             author=self.user_002
         )
+        self.post_003.tags.add(self.tag_python_kor)
+        self.post_003.tags.add(self.tag_python)
 
     def category_card_test(self, soup):
         categories_card = soup.find('div', id='categories-card')
@@ -82,14 +92,23 @@ class TestView(TestCase):
         post_001_card = main_area.find('div', id='post-1')
         self.assertIn(self.post_001.title, post_001_card.text)
         self.assertIn(self.post_001.category.name, post_001_card.text)
+        self.assertIn(self.tag_hello.name, post_001_card.text)
+        self.assertNotIn(self.tag_python.name, post_001_card.text)
+        self.assertNotIn(self.tag_python_kor.name, post_001_card.text)
 
         post_002_card = main_area.find('div', id='post-2')
         self.assertIn(self.post_002.title, post_002_card.text)
         self.assertIn(self.post_002.category.name, post_002_card.text)
+        self.assertNotIn(self.tag_hello.name, post_002_card.text)
+        self.assertNotIn(self.tag_python.name, post_002_card.text)
+        self.assertNotIn(self.tag_python_kor.name, post_002_card.text)
 
         post_003_card = main_area.find('div', id='post-3')
         self.assertIn('미분류', post_003_card.text)
         self.assertIn(self.post_003.title, post_003_card.text)
+        self.assertNotIn(self.tag_hello.name, post_003_card.text)
+        self.assertIn(self.tag_python.name, post_003_card.text)
+        self.assertIn(self.tag_python_kor.name, post_003_card.text)
 
         self.assertIn(self.user_001.username.upper(), main_area.text)
         self.assertIn(self.user_002.username.upper(), main_area.text)
@@ -131,6 +150,10 @@ class TestView(TestCase):
 
         # 2.6 첫 번째 포스트의 내용(content)이 포스트 영역에 있다.
         self.assertIn(self.post_001.content, post_area.text)
+
+        self.assertIn(self.tag_hello.name, post_area.text)
+        self.assertNotIn(self.tag_python.name, post_area.text)
+        self.assertNotIn(self.tag_python_kor.name, post_area.text)
 
     def test_category_page(self):
         response = self.client.get(self.category_programming.get_absolute_url())

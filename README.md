@@ -49,6 +49,8 @@ Post: 포스트의 형태 정의
 
 Category: 포스트가 해당하는 카테고리 모델
 
+Tag: 포스트에 걸린 태그 모델
+
 - 다대일 관계  
 
 여러 개의 모델이 하나의 모델에 연결되는 관계를 말한다.  
@@ -60,7 +62,8 @@ User - Post - Category와 User - Comment - Post가 있다.
 Post 모델은 author를 Foreign key로 두어 User와 연결한다.  
 
 ```buildoutcfg
-author = models.ForeignKey(User, on_delete=models.SET_NULL)
+class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.SET_NULL)
 ```
 
 - 다대다 관계  
@@ -70,6 +73,13 @@ author = models.ForeignKey(User, on_delete=models.SET_NULL)
 Post - Tag가 있다.  
 
 ![이미지](./readme_img/relationN-N.PNG)
+
+Post 모델에서 tags를 ManyToManyField를 이용하여 Tag 모델과 연결한다.
+
+```buildoutcfg
+class Post(models.Model):
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
+```
 
 ## 장고의 작동 구조  
 
