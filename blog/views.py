@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
-from .models import Post, Category
+from .models import Post, Category, Tag
 
 # Create your views here.
 
@@ -69,5 +69,21 @@ def category_page(request, slug):
             'categories': Category.objects.all(),
             'no_category_post_count': Post.objects.filter(category=None).count(),
             'category': category # post_list 템플릿에서 제목 옆에 뱃지를 붙일 때 카테고리 리스트인지 그냥 포스트 리스트인지 판단하는 용으로도 쓰인다.
+        }
+    )
+
+
+def tag_page(request, slug):
+    tag = Tag.objects.get(slug=slug)
+    post_list = tag.post_set.all()
+
+    return render(
+        request,
+        'blog/post_list.html',
+        {
+            'post_list': post_list,
+            'tag': tag,
+            'categories': Category.objects.all(),
+            'no_category_post_count': Post.objects.filter(category=None).count()
         }
     )
