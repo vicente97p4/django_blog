@@ -237,6 +237,28 @@ class PostList(ListView):
 ```
 
 
+- CreateView
+
+폼을 작성할 때 사용한다.
+
+사용자가 폼에 제대로 내용을 입력하면 form_valid 함수가 실행된다.
+
+form_valid 함수는 방문자가 폼에 담아 보낸 유효한 정보를 사용해 포스트를 만들고, 이 포스트의 고유 경로로 보내주는 역할(redirect)을 한다.
+
+```buildoutcfg
+class PostCreate(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+    
+    def form_valid(self, form):
+        current_user = self.request.user # 웹 사이트의 방문자 의미
+        if current_user.is_authenticated: # 로그인 여부 판단
+            form.instance.author = current_user
+            return super(PostCreate, self).form_valid(form) # 현재의 form을 CreateView의 기본 form_valid 함수에 인자로 보내 처리한다.
+        else:
+            return redirect('/blog/') # 로그인을 안 했을 경우 /blog/ 경로로 되돌려보낸다.
+```
+
 ### template  
 
 데이터를 채워넣고 사용자에게 보여주기 위한 틀이다.  
