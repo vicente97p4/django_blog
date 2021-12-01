@@ -259,6 +259,26 @@ class PostCreate(LoginRequiredMixin, CreateView):
             return redirect('/blog/') # 로그인을 안 했을 경우 /blog/ 경로로 되돌려보낸다.
 ```
 
+### dispatch()
+
+dispatch() 메서드는 방문자가 웹 사이트 서버에 GET 방식으로 요청했는지 POST 방식으로 요청했는지 판단하는 기능을 한다.  
+
+CreateView나 UpdateView의 경우 방문자가 서버에 GET 방식으로 들어오면 포스트를 작성할 수 있는 폼 페이지를 보내준다.  
+
+반면 같은 경로로 POST 방식으로 들어오면 폼이 유효한지 확인하고, 문제가 없으면 DB에 내용을 저장한다.  
+
+만일 권한이 없는 사용자가 create나 update를 시도하면 GET이든 POST이든 접근할 수 없도록 해야 한다.
+
+따라서 권한에 따라 접근을 막을 때 dispatch가 실행되는 순간 확인하도록 코드를 작성할 수 있다.  
+
+```buildoutcfg
+def dispatch(self, request, *args, **kwargs):
+    if request.user.is_authenticated and request.user == self.get_object().author:
+        return super(PostUpdate, self).dispatch(request, *args, **kwargs)
+    else:
+        raise PermissionDenied
+```
+
 ### template  
 
 데이터를 채워넣고 사용자에게 보여주기 위한 틀이다.  
