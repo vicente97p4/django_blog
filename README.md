@@ -184,6 +184,36 @@ FBV(Function Based View)는 함수에 기반을 둔 방법이다. 함수를 직�
 
 CBV(Class Based View)는 장고가 제공하는 클래스를 활용해 구현하는 방법이다. 장고는 웹 개발 시 반복적으로 많이 구현하는 것들을 클래스로 미리 만들어서 제공하는데, 이 클래스들을 이용하는 방법이다.  
 
+- template_name
+
+기본적으로 CBV는 사용하는 template 이름이 정해져있다.
+
+ListView: 모델명_list, DetailView: 모델명_detail, CreateView, UpdateView: 모델명_form 등
+
+다른 템플릿을 사용하려면 template_name 변수에 사용할 템플릿의 경로를 써주면 된다.
+
+```buildoutcfg
+template_name = 'blog/post_update_form.html'
+```
+
+- get_context_data(self, **kwargs)
+
+CBV로 뷰를 만들 때 템플릿으로 추가 인자를 넘기려면 get_context_data 함수를 이용한다.
+
+딕셔너리에 사용할 key, value를 담아 return하면 템플릿으로 인자가 넘어간다.
+
+```
+def get_context_data(self, **kwargs):
+    context = super(PostUpdate, self).get_context_data()
+    if self.object.tags.exists():
+        tags_str_list = []
+        for t in self.object.tags.all():
+            tags_str_list.append(t.name)
+        context['tags_str_default'] = '; '.join(tags_str_list)
+            
+    return context
+```
+
 ### 사용한 CBV  
 
 - ListView  
@@ -243,7 +273,7 @@ class PostList(ListView):
 
 사용자가 폼에 제대로 내용을 입력하면 form_valid 함수가 실행된다.
 
-form_valid 함수는 방문자가 폼에 담아 보낸 유효한 정보를 사용해 포스트를 만들고, 이 포스트의 고유 경로로 보내주는 역할(redirect)을 한다.
+form_valid 함수는 방문자가 폼에 담아 보낸 유효한 정보를 사용해 포스트를 만들어 DB에 저장하고, 이 포스트의 고유 경로로 보내주는 역할(redirect)을 한다.
 
 ```buildoutcfg
 class PostCreate(LoginRequiredMixin, CreateView):
