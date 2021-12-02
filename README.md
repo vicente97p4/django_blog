@@ -430,3 +430,21 @@ SlugField는 사람이 읽을 수 있는 텍스트로 고유 URL을 만들고 �
 field = models.SlugField(max_length=200, unique=True, allow_unicode=True)
 ```
 
+### HTML escaping
+
+마크다운 문법으로 작성된 텍스트를 HTML로 변환하여 가져올 때 HTML escaping을 방지하는 필터(safe)를 추가해야 한다.
+
+예를 들어 <tag> 같이 꺽쇠괄호를 사용한 텍스트를 <div> 태그 안에 사용한다고 하자.
+
+만일 <div><abc></div>같이 사용한다면 HTML 문법 기준으로는 렌더링하기 모호하다.
+
+<abc> 부분이 <abc>라는 텍스트인지 아니면 <abc>태그인지 판단하기 어렵기 때문이다.
+
+이런 상황을 방지하기 위해 <는 &lt, >는 &gt로 변환한다. 이런 행위를 HTML escaping이라고 한다.
+
+그리고 &lt, &gt같은 요소를 HTML entity라고 한다.
+
+장고는 {{ p.content }}와 같은 방식으로 불러온 값을 템플릿에 렌더링할 때 자동으로 HTML escaping을 한다.
+
+만일 마크다운 문법으로 작성한 내용을 HTML로 바꿔 화면에 그대로 출력하고 싷다면 {{ p.content | safe }}로 HTML escaping을 방지해야 한다.
+
