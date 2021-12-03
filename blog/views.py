@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import get_object_or_404
 from .models import Post, Category, Tag
+from .forms import CommentForm
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 
@@ -41,6 +43,7 @@ class PostDetail(DetailView):
         context = super(PostDetail, self).get_context_data()  # 기존에 제공했던 기능을 가져와서 context 변수에 저장
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        context['comment_form'] = CommentForm
         return context
 
 
@@ -124,6 +127,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
         else:
             return redirect('/blog/')
 
+
 # FBV로 작업했을 때
 # def single_post_page(request, pk):
 #     post = Post.objects.get(pk=pk) # pk 필드 값이 pk인 Post 레코드를 가져오라는 의미이다.
@@ -171,3 +175,23 @@ def tag_page(request, slug):
             'no_category_post_count': Post.objects.filter(category=None).count()
         }
     )
+
+
+def new_comment(request, pk):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)
+
+        if request.method == 'POST': # 만일 그냥 url에 /new_comment를 입력하여 접속하면 get method를 사용하여 접속하게 된다. 그럴 경우 redirect 시켜준다.
+            comment_form = CommentForm(request.POST)
+
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False) # 저장하는 기능 잠시 멈춤
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                return redirect(comment.get_absolute_url())
+        else:
+            return redirect(post.get_absolute_url())
+
+    else:
+        raise PermissionDenied
