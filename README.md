@@ -422,7 +422,7 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 ### Slug  
 
-SlugField는 사람이 읽을 수 있는 텍스트로 고유 URL을 만들고 싶을 때 주로 사용한다.  
+SlugField는 사람이 읽을 수 있는 텍스트로 고유 URL을 만들고 싶을 때 주로 사용하는 영어대소문자와 -, _로 이루어진 문자이다.  
 
 페이지의 개수가 많지 않을 때 사용하는 것이 좋다.  
 
@@ -436,11 +436,11 @@ field = models.SlugField(max_length=200, unique=True, allow_unicode=True)
 
 마크다운 문법으로 작성된 텍스트를 HTML로 변환하여 가져올 때 HTML escaping을 방지하는 필터(safe)를 추가해야 한다.
 
-예를 들어 <tag> 같이 꺽쇠괄호를 사용한 텍스트를 <div> 태그 안에 사용한다고 하자.
+예를 들어 ```<tag>``` 같이 꺽쇠괄호를 사용한 텍스트를 ```<div>``` 태그 안에 사용한다고 하자.
 
-만일 <div><abc></div>같이 사용한다면 HTML 문법 기준으로는 렌더링하기 모호하다.
+만일 ```<div><abc></div>```같이 사용한다면 HTML 문법 기준으로는 렌더링하기 모호하다.
 
-<abc> 부분이 <abc>라는 텍스트인지 아니면 <abc>태그인지 판단하기 어렵기 때문이다.
+```<abc>``` 부분이 ```<abc>```라는 텍스트인지 아니면 ```<abc>```태그인지 판단하기 어렵기 때문이다.
 
 이런 상황을 방지하기 위해 <는 &lt, >는 &gt로 변환한다. 이런 행위를 HTML escaping이라고 한다.
 
@@ -449,4 +449,50 @@ field = models.SlugField(max_length=200, unique=True, allow_unicode=True)
 장고는 {{ p.content }}와 같은 방식으로 불러온 값을 템플릿에 렌더링할 때 자동으로 HTML escaping을 한다.
 
 만일 마크다운 문법으로 작성한 내용을 HTML로 바꿔 화면에 그대로 출력하고 싷다면 {{ p.content | safe }}로 HTML escaping을 방지해야 한다.
+
+### Q
+
+장고에서 검색기능을 이용할 때 여러 쿼리를 동시에 사용하는 경우 사용할 수 있는 모듈이다.
+
+django.db.models에서 import 한다.
+
+```buildoutcfg
+from django.db.models import Q
+```
+
+ListView는 기본적으로 get_queryset() method를 제공한다. 이 메서드는 기본적으로 model로 지정된 요소 전체를 가져온다.
+
+만일 urls.py에서 url에서 받아온 문자가 있을 경우 그 문자는 view.py에서 self.kwargs dictionary에서 가져올 수 있다.
+
+이렇게 urls.py가 설정되어 있으면
+
+```buildoutcfg
+path('search/<str:q>/', views.PostSearch.as_view())
+```
+
+views.py에서
+
+```buildoutcfg
+class PostSearch(PostList):
+    def get_queryset(self):
+        q = self.kwargs['q']
+```
+
+q에 해당하는 부분을 이렇게 사용할 수 있다.
+
+그리고 여러 쿼리를 동시에 사용할 때 아래와 같이 쓸 수 있다.
+
+```buildoutcfg
+post_list = Post.objects.filter(
+    Q(title__contains=q) | Q(tag__name__contains=q) 
+).distinct()
+```
+
+먼저 __는 .과 같은 의미이다. 즉, title__contains는 title.contains와 같다. 
+
+쿼리 조건에서 사용할 때는 . 대신 __을 사용한다.
+
+|는 or &는 and를 뜻한다.
+
+distinct()는 두 쿼리 모두에 해당하는 데이터가 있을 경우 해당 데이터를 두 번 가져오는 것이 아니라 한 번만 가져온다.
 
