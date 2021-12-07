@@ -391,6 +391,7 @@ class TestView(TestCase):
         soup = BeautifulSoup(response.content, 'html.parser')
         comment_001_div = soup.find('div', id='comment-1')
         self.assertIn('user_001의 댓글 수정', comment_001_div.text)
+        comment_001_div = soup.find('div', 'card-body')
         self.assertIn('Updated: ', comment_001_div.text)
 
     def test_delete_comment(self):
@@ -406,7 +407,7 @@ class TestView(TestCase):
         # 로그인하지 않은 상태
         response = self.client.get(self.post_001.get_absolute_url())
         self.assertEqual(response.status_code, 200)
-        soup = BeautifulSoup(response.content, 'hmtl.parser')
+        soup = BeautifulSoup(response.content, 'html.parser')
 
         comment_area = soup.find('div', id='comment-area')
         self.assertFalse(comment_area.find('a', id='comment-1-delete-btn'))

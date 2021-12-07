@@ -163,11 +163,12 @@
                             <p>{{ comment.content | linebreaks }}</p>
                         </div>
                     </div>
-                <div class="mb-5">
+                            <div class="float-right">
                             {% if comment.created_at != comment.modified_at %}
                                 <p class="text-muted float-right"><small>Updated: {{ comment.modified_at }}</small></p>
                             {% endif %}
-                </div>
+                            </div>
+
                     <hr/>
                     {% endfor %}
                 {% endif %}

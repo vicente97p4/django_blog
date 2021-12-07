@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from .models import Post, Category, Tag, Comment
 from .forms import CommentForm
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.utils.text import slugify
 
 # Create your views here.
@@ -15,11 +16,23 @@ from django.utils.text import slugify
 class PostList(ListView):
     model = Post
     ordering = '-pk'
+    paginate_by = 10
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(PostList, self).get_context_data() # 기존에 제공했던 기능을 가져와서 context 변수에 저장
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        page = context['page_obj']
+        lst = page.paginator.page_range
+        if page.paginator.num_pages > 10:
+            if page.number <= 5:
+                lst = list(range(1, 11))
+            elif page.paginator.num_pages-5 <= page.number <= page.paginator.num_pages:
+                lst = list(range(page.paginator.num_pages-9, page.paginator.num_pages+1))
+            else:
+                lst = list(range(page.paginator.num_pages-4, page.paginator.num_pages+6))
+        context['page_range'] = lst
+
         return context
 
 
