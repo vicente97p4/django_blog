@@ -22,6 +22,27 @@
                 <h3 class="mt-4">알고리즘 문제풀이, CS 등 포스팅</h3>
             </div>
         </div>
+        <div class="row justify-content-between">
+            <div class="col-lg-9">
+                <h2 style="margin-top: 100px; margin-bottom: 30px">Blog - Recent Posts</h2>
+                {% for post in recent_posts %}
+                <div class="card mt-1">
+                    <a href="{{post.get_absolute_url}}" class="text-decorations-none text-dark">
+                    <div class="card-body">
+                        <h5>{{post.title}}</h5>
+                        {{post.hook_text}}
+                        <span class="badge badge-pill badge-light float-right">
+                            <img class="mr-1 rounded-circle" width="20px" src="{{post.get_avatar_url}}" alt="{{post.author}}">
+                            {{post.author.username}}
+                        &nbsp;&nbsp;
+                        {{post.created_at}}
+                        </span>
+                    </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </section>
 

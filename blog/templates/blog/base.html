@@ -9,7 +9,7 @@
     <script src="https://kit.fontawesome.com/513c45439b.js" crossorigin="anonymous"></script>
 </head>
 
-<body style="background-color: #f1f1f1;">
+<body style="background-color: #d8c8b2;">
 
 {% include 'blog/navbar.html' %}
 
@@ -37,11 +37,11 @@
                 <div class="card-header">Categories</div>
                 <div class="card-body">
                     <div class="row">
-                        <ul>
+                        <ul style="list-style: none;">
                             {% for category in categories %}
-                            <li><a href="{{ category.get_absolute_url }}">{{ category }} ({{ category.post_set.count }})</a></li>
+                            <li><a href="{{ category.get_absolute_url }}" class="text-decoration-none text-dark">{{ category }} ({{ category.post_set.count }})</a></li>
                             {% endfor %}
-                            <li><a href="/blog/category/no_category/">미분류 ({{ no_category_post_count }})</a></li>
+                            <li><a href="/blog/category/no_category/" class="text-decoration-none text-dark">미분류 ({{ no_category_post_count }})</a></li>
                         </ul>
                     </div>
                 </div>
