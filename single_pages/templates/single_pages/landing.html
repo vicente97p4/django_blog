@@ -24,16 +24,21 @@
         </div>
         <div class="row justify-content-between">
             <div class="col-lg-9">
-                <h2 style="margin-top: 100px; margin-bottom: 30px">Recent Posts</h2>
+                <h2 style="margin-top: 80px; margin-bottom: 30px">Recent Posts</h2>
                 {% for post in recent_posts %}
                 <div class="card mt-1" style="background-color: #f1f1f1">
-                    <a href="{{post.get_absolute_url}}" class="text-decorations-none text-dark">
+                    <a href="{{post.get_absolute_url}}" class="text-decoration-none text-dark">
                     <div class="card-body">
                         <h5>{{post.title}}
                         <span class="float-right" style="font-size: 14px;">
                         <i class="far fa-thumbs-up"></i> {{post.good.count}}
                             &nbsp;
+                            &nbsp;
                         <i class="fas fa-comments"></i> {{post.comment_set.count}}
+                            &nbsp;
+                            &nbsp;
+                            <span class="badge badge-pill badge-gray"> view</span>
+                            {{post.view_cnt}}
                         </span>
                         </h5>
 
@@ -63,9 +68,14 @@
                     <div class="card-body">
                         <h5>{{post.title}}
                         <span class="float-right" style="font-size: 14px;">
-                        <i class="far fa-thumbs-up"></i> {{post.good.count}}
+                            <i class="far fa-thumbs-up"></i> {{post.good.count}}
+                            &nbsp;
                             &nbsp;
                         <i class="fas fa-comments"></i> {{post.comment_set.count}}
+                            &nbsp;
+                            &nbsp;
+                            <span class="badge badge-pill badge-gray"> view</span>
+                            {{post.view_cnt}}
                         </span>
                         </h5>
 
@@ -86,16 +96,21 @@
 
         <div class="row justify-content-between">
             <div class="col-lg-9">
-                <h2 style="margin-top: 100px; margin-bottom: 30px">Many View Posts</h2>
+                <h2 style="margin-top: 100px; margin-bottom: 30px">Most Viewd Posts</h2>
                 {% for post in many_view_posts %}
                 <div class="card mt-1" style="background-color: #f1f1f1">
-                    <a href="{{post.get_absolute_url}}" class="text-decorations-none text-dark">
+                    <a href="{{post.get_absolute_url}}" class="text-decoration-none text-dark">
                     <div class="card-body">
                         <h5>{{post.title}}
                         <span class="float-right" style="font-size: 14px;">
-                        <i class="far fa-thumbs-up"></i> {{post.good.count}}
+                            <i class="far fa-thumbs-up"></i> {{post.good.count}}
+                            &nbsp;
                             &nbsp;
                         <i class="fas fa-comments"></i> {{post.comment_set.count}}
+                            &nbsp;
+                            &nbsp;
+                            <span class="badge badge-pill badge-gray"> view</span>
+                            {{post.view_cnt}}
                         </span>
                         </h5>
 

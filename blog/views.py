@@ -8,6 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
+from datetime import date, datetime, timedelta
 import json
 # Create your views here.
 
@@ -50,15 +51,48 @@ class PostList(ListView):
 #     )
 
 
-class PostDetail(DetailView):
-    model = Post
+# class PostDetail(DetailView):
+#     model = Post
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(PostDetail, self).get_context_data()  # 기존에 제공했던 기능을 가져와서 context 변수에 저장
+#         context['categories'] = Category.objects.all()
+#         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+#         context['comment_form'] = CommentForm
+#         return context
 
-    def get_context_data(self, **kwargs):
-        context = super(PostDetail, self).get_context_data()  # 기존에 제공했던 기능을 가져와서 context 변수에 저장
-        context['categories'] = Category.objects.all()
-        context['no_category_post_count'] = Post.objects.filter(category=None).count()
-        context['comment_form'] = CommentForm
-        return context
+
+def post_detail(request, pk):
+    login_session = request.session.get('login_session', '')
+    context = {'login_session': login_session}
+
+    post = get_object_or_404(Post, id=pk)
+    context['post'] = post
+    context['categories'] = Category.objects.all()
+    context['no_category_post_count'] = Post.objects.filter(category=None).count()
+    context['comment_form'] = CommentForm
+
+    # 글쓴이인지 확인
+    if post.author.id == login_session:
+        context['writer'] = True
+    else:
+        context['writer'] = False
+
+    response = render(
+        request,
+        'blog/post_detail.html',
+        context
+    )
+
+    cookie_value = request.COOKIES.get('enter_post', '_')
+
+    if f'{pk}' not in cookie_value:
+        cookie_value += f'{pk}_'
+        response.set_cookie('enter_post', value=cookie_value, httponly=True)
+        post.view_cnt += 1
+        post.save()
+
+    return response
 
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -272,3 +306,4 @@ def good(request):
             message = '좋아요'
         context = {'good_count': post.good.count(), 'message': message}
         return HttpResponse(json.dumps(context), content_type='application/json')
+

@@ -49,6 +49,8 @@ class Post(models.Model):
 
     good = models.ManyToManyField(User, related_name='good', blank=True)
 
+    view_cnt = models.PositiveIntegerField(default=0, verbose_name='조회수')
+
     def __str__(self):
         return f'[{self.pk}] {self.title}::{self.author}'
 

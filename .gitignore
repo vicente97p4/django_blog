@@ -142,7 +142,3 @@ cython_debug/
 migrations/
 _media/
 static/
-templates/account/
-templates/openid/
-templates/socialaccount/
-templates/tests/
