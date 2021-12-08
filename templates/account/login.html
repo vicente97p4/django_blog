@@ -1,0 +1,48 @@
+{% extends "account/base.html" %}
+
+{% load static %}
+{% load account socialaccount %}
+
+{% block head_title %}Log In{% endblock %}
+
+{% block content %}
+
+<div class="container" style="height:100vh">
+  <div class="row justify-content-center h-100">
+      <div class="col align-self-center text-center card my-3 " style="max-width: 35rem; height: 30rem; background-color: #dde7e7;">
+        <div class="card-header row justify-content-center"><h1 style="font-family: 'Staatliches', cursive;">Vicente's Blog</h1></div>
+        <div class="card-body" style="background-color: #dde7e7;">
+        <h1 class="card-title mb-4">Log In</h1>
+
+          {% get_providers as socialaccount_providers %}
+
+          <form class="login" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% if redirect_field_value %}
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            </div>
+            {% endif %}
+            <button class="btn btn-outline-info mb-3" type="submit">Log In</button>
+          </form>
+          {% if socialaccount_providers %}
+
+          <div class="my-2">
+          <a href="/accounts/signup/?process=login&{{ redirect_field_name }}={{ redirect_field_value }}" role="button" class="btn btn btn-light my-1" style="display:block"><i class="far fa-envelope"></i> Sign Up by Email</a>
+          <a href="/accounts/google/login/?process=login&{{ redirect_field_name }}={{ redirect_field_value }}" role="button" class="btn btn btn-light my-1" style="display:block"><i class="fab fa-google"></i> Login with Google</a>
+          </div>
+          {% include "socialaccount/snippets/login_extra.html" %}
+
+          {% else %}
+          <p>If you have not created an account yet, then please
+          <a href="{{ signup_url }}">sign up</a> first.</p>
+          {% endif %}
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

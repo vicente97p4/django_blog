@@ -47,6 +47,8 @@ class Post(models.Model):
 
     tags = models.ManyToManyField(Tag, blank=True)
 
+    good = models.ManyToManyField(User, related_name='good', blank=True)
+
     def __str__(self):
         return f'[{self.pk}] {self.title}::{self.author}'
 
@@ -67,6 +69,7 @@ class Post(models.Model):
             return self.author.socialaccount_set.first().get_avatar_url()
         else:
             return f'https://picsum.photos/seed/{self.author.pk}/60/60'
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

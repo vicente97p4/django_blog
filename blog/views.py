@@ -7,7 +7,8 @@ from .forms import CommentForm
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 from django.db.models import Q
-
+from django.http import HttpResponse, JsonResponse
+import json
 # Create your views here.
 
 # CBV로 작업했을 때
@@ -248,3 +249,26 @@ class PostSearch(PostList):
         context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
 
         return context
+
+
+def good(request):
+    if request.is_ajax():
+
+        pk = request.GET['pk']
+        post = Post.objects.get(pk=pk)
+
+        if not request.user.is_authenticated:
+            print('operated')
+            message = '로그인이 필요합니다.'
+            context = {'good_count': post.good.count(), 'message': message}
+            return HttpResponse(json.dumps(context), content_type='application/json')
+
+        user = request.user
+        if post.good.filter(id=user.id):
+            post.good.remove(user)
+            message = '좋아요 취소'
+        else:
+            post.good.add(user)
+            message = '좋아요'
+        context = {'good_count': post.good.count(), 'message': message}
+        return HttpResponse(json.dumps(context), content_type='application/json')

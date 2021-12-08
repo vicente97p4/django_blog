@@ -50,6 +50,12 @@
                 <div class="card-footer text-muted">
                     Posted on {{ p.created_at }} by
                     <a href="#" class="text-dark">{{ p.author | upper }}</a>
+
+                    <span class="float-right" style="font-size: 17px;">
+                        <i class="far fa-thumbs-up"></i> {{p.good.count}}
+                            &nbsp;
+                        <i class="fas fa-comments"></i> {{p.comment_set.count}}
+                    </span>
                 </div>
             </div>
         {% endfor %}

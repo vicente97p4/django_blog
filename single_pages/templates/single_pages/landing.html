@@ -14,7 +14,7 @@
 
 {% include 'blog/navbar.html' %}
 
-<section>
+<section class="mb-5">
     <div class="container">
         <div class="row justify-content-between">
             <div class="col-lg-6">
@@ -24,13 +24,53 @@
         </div>
         <div class="row justify-content-between">
             <div class="col-lg-9">
-                <h2 style="margin-top: 100px; margin-bottom: 30px">Blog - Recent Posts</h2>
+                <h2 style="margin-top: 100px; margin-bottom: 30px">Recent Posts</h2>
                 {% for post in recent_posts %}
                 <div class="card mt-1" style="background-color: #f1f1f1">
                     <a href="{{post.get_absolute_url}}" class="text-decorations-none text-dark">
                     <div class="card-body">
-                        <h5>{{post.title}}</h5>
+                        <h5>{{post.title}}
+                        <span class="float-right" style="font-size: 14px;">
+                        <i class="far fa-thumbs-up"></i> {{post.good.count}}
+                            &nbsp;
+                        <i class="fas fa-comments"></i> {{post.comment_set.count}}
+                        </span>
+                        </h5>
+
                         {{post.hook_text}}
+
+                        <span class="badge badge-pill badge-light float-right">
+                            <img class="mr-1 rounded-circle" width="20px" src="{{post.get_avatar_url}}" alt="{{post.author}}">
+                            {{post.author.username}}
+                        &nbsp;&nbsp;
+                        {{post.created_at}}
+                        </span>
+
+
+                    </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row justify-content-between">
+            <div class="col-lg-9">
+                <h2 style="margin-top: 100px; margin-bottom: 30px">Hot Posts</h2>
+                {% for post in hot_posts %}
+                <div class="card mt-1" style="background-color: #f1f1f1">
+                    <a href="{{post.get_absolute_url}}" class="text-decoration-none text-dark" style="text-decoration-line: none;">
+                    <div class="card-body">
+                        <h5>{{post.title}}
+                        <span class="float-right" style="font-size: 14px;">
+                        <i class="far fa-thumbs-up"></i> {{post.good.count}}
+                            &nbsp;
+                        <i class="fas fa-comments"></i> {{post.comment_set.count}}
+                        </span>
+                        </h5>
+
+                        {{post.hook_text}}
+
                         <span class="badge badge-pill badge-light float-right">
                             <img class="mr-1 rounded-circle" width="20px" src="{{post.get_avatar_url}}" alt="{{post.author}}">
                             {{post.author.username}}
@@ -43,12 +83,44 @@
                 {% endfor %}
             </div>
         </div>
+
+        <div class="row justify-content-between">
+            <div class="col-lg-9">
+                <h2 style="margin-top: 100px; margin-bottom: 30px">Many View Posts</h2>
+                {% for post in many_view_posts %}
+                <div class="card mt-1" style="background-color: #f1f1f1">
+                    <a href="{{post.get_absolute_url}}" class="text-decorations-none text-dark">
+                    <div class="card-body">
+                        <h5>{{post.title}}
+                        <span class="float-right" style="font-size: 14px;">
+                        <i class="far fa-thumbs-up"></i> {{post.good.count}}
+                            &nbsp;
+                        <i class="fas fa-comments"></i> {{post.comment_set.count}}
+                        </span>
+                        </h5>
+
+                        {{post.hook_text}}
+
+                        <span class="badge badge-pill badge-light float-right">
+                            <img class="mr-1 rounded-circle" width="20px" src="{{post.get_avatar_url}}" alt="{{post.author}}">
+                            {{post.author.username}}
+                        &nbsp;&nbsp;
+                        {{post.created_at}}
+                        </span>
+
+
+                    </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </section>
 
-<div class="fixed-bottom">
-    {% include 'blog/footer.html' %}
-</div>
+
+{% include 'blog/footer.html' %}
+
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
