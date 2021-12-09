@@ -19,7 +19,7 @@
         <div class="row" style="display: flex; justify-content: space-between;">
             {% for p in post %}
             <div class="card mb-4 enlarge" id="post-{{ p.pk }}" style="max-height: 500px; width: 410px">
-                {% if p.1.head_image %}
+                {% if p.head_image %}
                     <a href="{{ p.get_absolute_url }}"><img class="card-img-top mt-3" src="{{ p.head_image.url }}" alt="..." style="max-height: 200px;"/></a>
                 {% else %}
                     <a href="{{ p.get_absolute_url }}"><img class="card-img-top mt-3" src="https://picsum.photos/seed/{{ p.pk }}/410/200" alt="..." style="max-height: 200px;"/></a>
