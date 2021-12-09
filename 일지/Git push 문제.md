@@ -101,9 +101,14 @@ autocrlf=true
 
 를 추가해주어도 안 되었다.  
 
-그래서 그냥 static 파일을 .gitignore에 등록하고 그냥 푸시를 안 하기로 했다.  
+그래서 그냥 .map 파일을 .gitignore에 등록하고 그냥 푸시를 안 하기로 했다.  
 
-static 파일은 뭐.. 나중에 따로라도 올리면 되니까..  
+.map 파일은 뭐.. 나중에 따로라도 올리면 되니까..  
+
+이제 git push에 성공했다.
+
+![이미지](./img/gitpushsuccess.PNG)
+
 ```
 ├── static ─── blog ─── bootstrap ─── bootstrap.min.css
                      │             └── bootstrap.min.css.map
