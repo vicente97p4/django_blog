@@ -24,6 +24,16 @@ class PostList(ListView):
         context = super(PostList, self).get_context_data() # 기존에 제공했던 기능을 가져와서 context 변수에 저장
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        lst = context['post_list']
+
+        temp = []
+        for i in range(0, len(lst), 2):
+            tmp = []
+            tmp.append(lst[i])
+            if i+1 < len(lst):
+                tmp.append(lst[i+1])
+            temp.append(tmp)
+        context['post_list'] = temp
         page = context['page_obj']
         lst = page.paginator.page_range
         if page.paginator.num_pages > 10:

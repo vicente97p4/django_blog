@@ -9,7 +9,7 @@
     <script src="https://kit.fontawesome.com/513c45439b.js" crossorigin="anonymous"></script>
 </head>
 
-<body style="background-color: #dde7e7;">
+<body style="background-color: #f1f1f1;">
 
 {% include 'blog/navbar.html' %}
 
@@ -20,8 +20,9 @@
             {% block main_area %}
             {% endblock %}
         </div>
-
-        <div class="col-md-4 col-lg-3">
+        <div style="width: 10px;"></div>
+        <div class="col-md-4 col-lg-2 float-right" style="margin-top: 108px;">
+            <div style="width: 300px;">
             <!-- Search widget-->
             <div class="card mb-4">
                 <div class="card-header">Search</div>
@@ -46,6 +47,7 @@
                     </div>
                 </div>
             </div>
+                </div>
         </div>
     </div>
 </div>

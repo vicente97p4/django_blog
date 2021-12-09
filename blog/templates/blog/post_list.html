@@ -8,21 +8,21 @@
         {% endif %}
     {% endif %}
 
-    <h1>Blog
+    <h1 style="margin-bottom: 30px;">Blog
         {% if search_info %}<small class="text-muted">{{search_info}}</small>{%endif%}
         {% if category %}<span class="badge badge-secondary">{{ category }} </span> {% endif %}
         {% if tag %}<span class="badge badge-light"><i class="fas fa-tags"></i>{{ tag }} ({{ tag.post_set.count }})</span>{% endif %}
     </h1>
 
-    {% if post_list.exists %}
-
-        {% for p in post_list %}
-
-            <div class="card mb-4" id="post-{{ p.pk }}">
-                {% if p.head_image %}
-                    <a href="{{ p.get_absolute_url }}"><img class="card-img-top" src="{{ p.head_image.url }}" alt="..." /></a>
+    {% if post_list %}
+        {% for post in post_list %}
+        <div class="row" style="display: flex; justify-content: space-between;">
+            {% for p in post %}
+            <div class="card mb-4 enlarge" id="post-{{ p.pk }}" style="max-height: 500px; width: 410px">
+                {% if p.1.head_image %}
+                    <a href="{{ p.get_absolute_url }}"><img class="card-img-top mt-3" src="{{ p.head_image.url }}" alt="..." style="max-height: 200px;"/></a>
                 {% else %}
-                    <a href="{{ p.get_absolute_url }}"><img class="card-img-top" src="https://picsum.photos/seed/{{ p.pk }}/800/600" alt="..." /></a>
+                    <a href="{{ p.get_absolute_url }}"><img class="card-img-top mt-3" src="https://picsum.photos/seed/{{ p.pk }}/410/200" alt="..." style="max-height: 200px;"/></a>
                 {% endif %}
 
                 <div class="card-body">
@@ -31,27 +31,30 @@
                     {% else %}
                         <span class="badge badge-secondary float-right">미분류</span>
                     {% endif %}
-                    <h2 class="card-title">{{ p.title }}</h2>
+                    <h4 class="card-title">{{ p.title }}</h4>
                     {% if p.hook_text %}
-                        <h5 class="text-muted">{{ p.hook_text }}</h5>
+                        <h6 class="text-muted">{{ p.hook_text }}</h6>
                     {% endif %}
-                    <p class="card-text">{{ p.get_content_markdown | truncatewords_html:45 | safe}}</p>
 
+                    <div class="mt-5" style="display: flex;">
                     {% if p.tags.exists %}
-                        <i class="fas fa-tags"></i>
+                        <i class="fas fa-tags" style="width: 16px; height: 9px;"></i>
                         {% for tag in p.tags.iterator %}
                             <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light">{{ tag }}</span> </a>
                         {% endfor %}
-                        <br/>
-                        <br/>
-                    {% endif %}
-                    <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
-                </div>
-                <div class="card-footer text-muted">
-                    Posted on {{ p.created_at }} by
-                    <a href="#" class="text-dark">{{ p.author | upper }}</a>
 
-                    <span class="float-right" style="font-size: 17px;">
+                    {% endif %}
+
+                    <a href="{{ p.get_absolute_url }}" class="btn-sm btn-primary" style="margin-left: auto;">Read More &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="card-footer text-muted" style="background-color: #fff">
+                    {{ p.created_at }}
+                    <br/>
+                    <a href="#" class="text-dark" style="font-size: 15px;">by {{ p.author | lower }}</a>
+
+                    <span class="float-right" style="font-size: 15px;">
                         <i class="far fa-thumbs-up"></i> {{p.good.count}}
                             &nbsp;&nbsp;
                         <i class="fas fa-comments"></i> {{p.comment_set.count}}
@@ -61,6 +64,8 @@
                     </span>
                 </div>
             </div>
+            {% endfor %}
+             </div>
         {% endfor %}
     {% else %}
         <h3 class="my-5">아직 게시물이 없습니다.</h3>

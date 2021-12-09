@@ -1,0 +1,10 @@
+.padding-for-footer {
+    padding-bottom: 130px;
+}
+.enlarge{
+    transition: all 0.2s linear;
+}
+
+.enlarge:hover{
+    transform: scale(1.2);
+}
