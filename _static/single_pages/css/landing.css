@@ -1,0 +1,15 @@
+.card{
+    background-color: #dde7e7;
+}
+
+body{
+    background-color: #f1f1f1;
+}
+
+.enlarge{
+    transition: all 0.2s linear;
+}
+
+.enlarge:hover{
+    transform: scale(1.1);
+}
