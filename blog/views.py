@@ -207,6 +207,14 @@ def category_page(request, slug):
         category = Category.objects.get(slug=slug) # slug와 동일한 값을 갖는 카테고리를 불러오는 쿼리
         post_list = Post.objects.filter(category=category)
 
+    temp = []
+    for i in range(0, len(post_list), 2):
+        tmp = []
+        tmp.append(post_list[i])
+        if i + 1 < len(post_list):
+            tmp.append(post_list[i + 1])
+        temp.append(tmp)
+    post_list = temp
     return render(
         request,
         'blog/post_list.html', # post_list 템플릿을 그대로 사용함

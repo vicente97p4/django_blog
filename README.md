@@ -496,3 +496,67 @@ post_list = Post.objects.filter(
 
 distinct()는 두 쿼리 모두에 해당하는 데이터가 있을 경우 해당 데이터를 두 번 가져오는 것이 아니라 한 번만 가져온다.
 
+## 도커
+
+도커는 다른 하드웨어와 운영체제에서 작업하더라도 동일한 환경을 갖출 수 있도록 도와주는 기술이다.
+
+도커 작동 순서
+
+1. 도커의 설정 파일에 OS, python 버전, 라이브러리, 소스 코드, 이미지 파일 등 웹 사이트 배포에 필요한 환경설정 정보 지정
+
+2. 서버 전체를 복제한 컨테이너 이미지 생성
+
+3. 컨테이너 이미지 실행 시 컨테이너가 실행되면서 기존과 동일한 상태로 웹 사이트 서버 실행
+
+```buildoutcfg
+# pull official base image
+# 도커는 파이썬이 설치되어 있는 이미지를 기본으로 제공한다. 이 이미지를 불러온다.
+FROM python:3.8.0-alpine
+
+# set work directory
+# 프로젝트의 작업 폴더를 /usr/src/app으로 지정한다.
+WORKDIR /usr/src/app
+
+# set environment variables
+# 파이썬은 종종 소스 코드를 컴파일해서 확장자가 .pyc인 파일을 생성한다.
+# 도커를 이용할 때는 .pyc 파일이 필요하지 않으므로 .pyc 파일을 생성하지 않도록 한다.
+ENV PYTHONDONTWRITEBYTECODE 1
+# 파이썬 로그가 버퍼링 없이 즉각적으로 출력하게 만든다.
+ENV PYTHONUNBUFFERED 1
+
+# requirements.txt에서 살펴본 라이브러리를 설치하기 위해 필요한 gcc, musl-dev 등을 미리 설치한다.
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev zlib-dev jpeg-dev
+
+# 로컬 커퓨터의 현재 위치(Dockerfile의 위치)에 있는 파일들을 모두 작업 폴더(WORKDIR)로 복사한다.
+# 그래야 지금까지 작성한 장고 프로젝트가 도커 이미지에 담긴다.
+COPY . /usr/src/app/
+
+# install dependencies
+# requirements.txt에 나열된 라이브러리를 설치한다.
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+```
+
+### 도커 컴포즈 파일
+
+도커 컴포즈 파일을 사용하면 컨테이너 여러 개를 한 번에 실행시킬 수 있고, 옵션도 줄 수 있다.
+
+```buildoutcfg
+# 도커 컴포즈 파일 포맷을 최신 버전으로 사용하겠다는 의미
+version: '3'
+
+services:
+  web: # web이라는 이름의 서비스 실행
+    build: . # 현재 폴더를 build한다. Dockerfile이 현재 폴더에 있으므로 이 파일을 이용해 컨테이너 이미지를 만든다.
+    command: python manage.py runserver 0.0.0.0:8000 # 서버 실행 명령 입력
+    volumes: # volumes로 로컬 컴퓨터의 폴더와 도커의 폴더를 연결한다.
+      - ./:/usr/src/app/ # 현재 폴더를 /usr/src/app/ 폴더와 연결한다.
+      ports: # 8000 포트 사용
+        - 8000:8000
+env_file: # 오류가 발생했을 시 오류 페이지가 다른 사람에게 보이지 않도록 settings.py에서 관리되던 요소 일부를
+  - ./.env.dev # 개발환경(.env.dev)과 배포환경(.env.prod)으로 나누어 관리하려 한다.
+  # 아직은 개발 중이므로 개발환경 파일(.env.dev)만 지정한다. 
+  # env_file을 따로 명시하면 settings.py에서 이 값을 불러와서 사용할 수 있다.
+``` 
+
