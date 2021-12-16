@@ -141,3 +141,4 @@ cython_debug/
 _media/
 .env.prod
 .env.prod.db
+.map
