@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from .models import Post, Category, Tag, Comment
-from .forms import CommentForm
+from .forms import CommentForm, PostForm
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 from django.db.models import Q
@@ -107,8 +107,8 @@ def post_detail(request, pk):
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
-
+    # fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+    form_class = PostForm
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.is_staff
 
@@ -141,8 +141,8 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
-    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
-
+    # fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+    form_class = PostForm
     template_name = 'blog/post_update_form.html'
 
     def get_context_data(self, **kwargs):
@@ -290,7 +290,7 @@ class PostSearch(PostList):
     def get_queryset(self):
         q = self.kwargs['q']
         post_list = Post.objects.filter(
-            Q(title__contains=q) | Q(tags__name__contains=q)
+            Q(title__contains=q) | Q(tags__name__contains=q) | Q(author__username__contains=q)
         ).distinct().order_by('-pk')
 
         return post_list
@@ -310,7 +310,6 @@ def good(request):
         post = Post.objects.get(pk=pk)
 
         if not request.user.is_authenticated:
-            print('operated')
             message = '로그인이 필요합니다.'
             context = {'good_count': post.good.count(), 'message': message}
             return HttpResponse(json.dumps(context), content_type='application/json')

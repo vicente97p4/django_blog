@@ -72,7 +72,8 @@
         <h3 class="my-5">아직 게시물이 없습니다.</h3>
     {% endif %}
 
-    {% if is_paginated %}
+
+
     <!-- Pagination-->
     <nav aria-label="Pagination">
         <hr class="my-0" />
@@ -104,6 +105,46 @@
             {% endif %}
         </ul>
     </nav>
-    {% endif %}
 
+{% endblock %}
+
+
+{% block foot_area %}
+{% if post_list %}
+{% if post_list|length < 2 %}
+<footer class="py-3 bg-dark fixed-bottom" id="foot">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; vicente</p></div>
+</footer>
+{% else %}
+<footer class="py-3 bg-dark" id="foot">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; vicente</p></div>
+</footer>
+{% endif %}
+{% else %}
+<footer class="py-3 bg-dark fixed-bottom" id="foot">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; vicente</p></div>
+</footer>
+{% endif %}
+
+<script>
+    function searchPost(){
+        let searchValue = document.getElementById('search-input').value.trim()
+        if (searchValue.length > 1){
+            location.href="/blog/search/" + searchValue + "/";
+        }
+        else if(searchValue.length == 0){
+            location.href="/blog/";
+        }
+        else{
+            alert('검색어('+searchValue+')가 너무 짧습니다.')
+        }
+    };
+
+
+    document.getElementById('search-input').addEventListener('keyup', function(event){
+        if(event.key == 'Enter'){
+            searchPost();
+        }
+    })
+</script>
 {% endblock %}

@@ -1,16 +1,16 @@
 <!-- Footer-->
 {% if post_list %}
     {% if post_list|length < 2 %}
-    <footer class="py-3 bg-dark fixed-bottom">
+    <footer class="py-3 bg-dark fixed-bottom" id="foot">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; vicente</p></div>
     </footer>
     {% else %}
-    <footer class="py-3 bg-dark">
+    <footer class="py-3 bg-dark" id="foot">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; vicente</p></div>
     </footer>
     {% endif %}
 {% else %}
-<footer class="py-3 bg-dark">
+<footer class="py-3 bg-dark fixed-bottom" id="foot">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; vicente</p></div>
 </footer>
 {% endif %}

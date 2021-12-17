@@ -1,8 +1,13 @@
 from django.contrib import admin
-from markdownx.admin import MarkdownxModelAdmin
+from django_summernote.admin import SummernoteModelAdmin
 from .models import Post, Category, Tag, Comment
 
-admin.site.register(Post, MarkdownxModelAdmin)
+
+class PostModelAdmin(SummernoteModelAdmin):  # instead of ModelAdmin
+    summernote_fields = ('content',)
+
+
+admin.site.register(Post, PostModelAdmin)
 admin.site.register(Comment)
 
 
@@ -16,3 +21,7 @@ class TagAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
+
+
+
+
