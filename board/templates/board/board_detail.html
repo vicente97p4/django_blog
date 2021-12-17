@@ -126,7 +126,7 @@
 
     function board_good(id){
         $.ajax({
-            url: "{% url 'good' %}",
+            url: "{% url 'board_good' %}",
             data: {
                 'pk': id
             },

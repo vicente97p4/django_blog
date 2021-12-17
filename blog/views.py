@@ -305,7 +305,8 @@ class PostSearch(PostList):
 
 def good(request):
     if request.is_ajax():
-
+        print()
+        print('operate')
         pk = request.GET['pk']
         post = Post.objects.get(pk=pk)
 
