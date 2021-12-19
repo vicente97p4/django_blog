@@ -14,6 +14,15 @@ import json
 
 # CBV로 작업했을 때
 
+def packing(lst):
+    temp = []
+    for i in range(0, len(lst), 2):
+        tmp = []
+        tmp.append(lst[i])
+        if i+1 < len(lst):
+            tmp.append(lst[i+1])
+        temp.append(tmp)
+    return temp
 
 class PostList(ListView):
     model = Post
@@ -24,16 +33,8 @@ class PostList(ListView):
         context = super(PostList, self).get_context_data() # 기존에 제공했던 기능을 가져와서 context 변수에 저장
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
-        lst = context['post_list']
+        context['post_list'] = packing(context['post_list'])
 
-        temp = []
-        for i in range(0, len(lst), 2):
-            tmp = []
-            tmp.append(lst[i])
-            if i+1 < len(lst):
-                tmp.append(lst[i+1])
-            temp.append(tmp)
-        context['post_list'] = temp
         page = context['page_obj']
         lst = page.paginator.page_range
         if page.paginator.num_pages > 10:
@@ -118,7 +119,7 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             form.instance.author = current_user
             response = super(PostCreate, self).form_valid(form)
 
-            tags_str = self.request.POST.get('tags_str')
+            tags_str = self.request.POST.get('id_tags_str')
             if tags_str:
                 tags_str = tags_str.strip()
 
@@ -165,7 +166,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
         response = super(PostUpdate, self).form_valid(form)
         self.object.tags.clear()
 
-        tags_str = self.request.POST.get('tags_str')
+        tags_str = self.request.POST.get('id_tags_str')
         if tags_str:
             tags_str = tags_str.strip()
 
@@ -207,14 +208,7 @@ def category_page(request, slug):
         category = Category.objects.get(slug=slug) # slug와 동일한 값을 갖는 카테고리를 불러오는 쿼리
         post_list = Post.objects.filter(category=category)
 
-    temp = []
-    for i in range(0, len(post_list), 2):
-        tmp = []
-        tmp.append(post_list[i])
-        if i + 1 < len(post_list):
-            tmp.append(post_list[i + 1])
-        temp.append(tmp)
-    post_list = temp
+    post_list = packing(post_list)
     return render(
         request,
         'blog/post_list.html', # post_list 템플릿을 그대로 사용함
@@ -229,7 +223,7 @@ def category_page(request, slug):
 
 def tag_page(request, slug):
     tag = Tag.objects.get(slug=slug)
-    post_list = tag.post_set.all()
+    post_list = packing(tag.post_set.all())
 
     return render(
         request,

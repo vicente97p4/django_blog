@@ -20,7 +20,7 @@
             {% for p in post %}
             <div class="card mb-4 enlarge" id="post-{{ p.pk }}" style="max-height: 500px; width: 410px">
                 {% if p.head_image %}
-                    <a href="{{ p.get_absolute_url }}"><img class="card-img-top mt-3" src="{{ p.head_image.url }}" alt="..." style="max-height: 200px;"/></a>
+                    <a href="{{ p.get_absolute_url }}"><img class="card-img-top mt-3" src="{{ p.head_image.url }}" alt="..." style="height: 200px; width:410px"/></a>
                 {% else %}
                     <a href="{{ p.get_absolute_url }}"><img class="card-img-top mt-3" src="https://picsum.photos/seed/{{ p.pk }}/410/200" alt="..." style="max-height: 200px;"/></a>
                 {% endif %}
