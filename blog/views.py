@@ -119,7 +119,7 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             form.instance.author = current_user
             response = super(PostCreate, self).form_valid(form)
 
-            tags_str = self.request.POST.get('id_tags_str')
+            tags_str = self.request.POST.get('tags_str')
             if tags_str:
                 tags_str = tags_str.strip()
 
@@ -166,7 +166,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
         response = super(PostUpdate, self).form_valid(form)
         self.object.tags.clear()
 
-        tags_str = self.request.POST.get('id_tags_str')
+        tags_str = self.request.POST.get('tags_str')
         if tags_str:
             tags_str = tags_str.strip()
 
