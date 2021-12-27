@@ -80,7 +80,7 @@
         <ul class="pagination justify-content-center my-4">
             {% if page_obj.has_previous %}
             <li class="page-item"><a class="page-link" href="?page={{ 1 }}" tabindex="-1">First</a></li>
-            {% if 5 < page_obj.number %}
+            {% if 1 != page_range|first %}
             <li class="page-item disabled"><a class="page-link" href="#!">...</a></li>
             {% endif %}
             {% else %}
@@ -96,7 +96,7 @@
             {% endfor %}
 
             {% if page_obj.has_next %}
-            {% if page_obj.paginator.num_pages not in page_range %}
+            {% if page_obj.paginator.num_pages != page_range|last %}
             <li class="page-item disabled"><a class="page-link" href="#!">...</a></li>
             {% endif %}
             <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" tabindex="-1">Last</a></li>
